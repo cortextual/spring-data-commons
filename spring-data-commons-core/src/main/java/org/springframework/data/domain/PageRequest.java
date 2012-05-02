@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package org.springframework.data.domain;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlType;
+
 import org.springframework.data.domain.Sort.Direction;
 
 /**
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Sort.Direction;
  * 
  * @author Oliver Gierke
  */
+@XmlType(name = "foo")
 public class PageRequest implements Pageable, Serializable {
 
 	private static final long serialVersionUID = 8280485938848398236L;

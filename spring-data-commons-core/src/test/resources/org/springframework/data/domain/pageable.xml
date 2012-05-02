@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wrapper xmlns:spring-data="http://spring-foo/xsd">
+    <spring-data:page-request page="2" size="15">
+        <spring-data:order property="firstname" direction="ASC"/>
+        <spring-data:order property="lastname" direction="ASC"/>
+    </spring-data:page-request>
+    <spring-data:page-request-without-sort page="10" size="20"/>
+    <spring-data:sort>
+        <spring-data:order property="firstname" direction="ASC"/>
+        <spring-data:order property="lastname" direction="ASC"/>
+    </spring-data:sort>
+</wrapper>
+
