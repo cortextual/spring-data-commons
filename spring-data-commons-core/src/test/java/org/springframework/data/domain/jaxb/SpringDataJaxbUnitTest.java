@@ -17,7 +17,7 @@ www.apache.org/licenses/LICENSE-2.0
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.domain;
+package org.springframework.data.domain.jaxb;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -27,7 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -36,12 +38,19 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.SpringDataJaxb.PageAdapter;
 import org.springframework.hateoas.Link;
 
 /**
@@ -56,12 +65,16 @@ public class SpringDataJaxbUnitTest {
 
 	Sort sort = new Sort(Direction.ASC, "firstname", "lastname");
 	Pageable reference = new PageRequest(2, 15, sort);
-	ClassPathResource resource = new ClassPathResource("pageable.xml", this.getClass());
+	Resource resource = new ClassPathResource("pageable.xml", this.getClass());
+	Resource schemaFile = new ClassPathResource("spring-data-jaxb.xsd", this.getClass());
 
 	@Before
 	public void setUp() throws Exception {
 
-		JAXBContext context = JAXBContext.newInstance("org.springframework.data.domain");
+		JAXBContext context = JAXBContext.newInstance("org.springframework.data.domain.jaxb");
+
+		// SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		// Schema schema = schemaFactory.newSchema(schemaFile.getFile());
 
 		marshaller = context.createMarshaller();
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -78,6 +91,8 @@ public class SpringDataJaxbUnitTest {
 		wrapper.sort = sort;
 		wrapper.pageableWithoutSort = new PageRequest(10, 20);
 		marshaller.marshal(wrapper, writer);
+
+		System.out.println(writer);
 
 		Scanner scanner = new Scanner(resource.getFile());
 
@@ -121,13 +136,11 @@ public class SpringDataJaxbUnitTest {
 
 		@XmlElement(name = "sort", namespace = SpringDataJaxb.NAMESPACE)
 		Sort sort;
-
 	}
 
-	@XmlRootElement
+	@XmlRootElement(name = "wrapper", namespace = SpringDataJaxb.NAMESPACE)
 	static class PageWrapper {
 
-		@XmlElement
 		Page<Content> page;
 
 		@XmlElement(name = "page-with-links")

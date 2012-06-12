@@ -17,8 +17,6 @@ package org.springframework.data.domain;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlType;
-
 import org.springframework.data.domain.Sort.Direction;
 
 /**
@@ -26,7 +24,6 @@ import org.springframework.data.domain.Sort.Direction;
  * 
  * @author Oliver Gierke
  */
-@XmlType(name = "foo")
 public class PageRequest implements Pageable, Serializable {
 
 	private static final long serialVersionUID = 8280485938848398236L;
